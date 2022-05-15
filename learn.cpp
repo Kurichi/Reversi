@@ -93,9 +93,9 @@ int main() {
         a.first.setTurn(j % 2);
         if (runRand(a.first, j % 2) == (j % 2)) a.second++;
       }
-      if (!(++progress % 10))
-        std::cout << "\b\b\b" << std::setw(2) << progress / 10 << " % ";
+      std::cout << ++progress << std::endl;
     }
+    std::cout << "End" << std::endl;
 
     // sort by win-count
     sort(v.begin(), v.end(), [](auto const& lhs, auto const& rhs) {
