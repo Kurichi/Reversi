@@ -2,7 +2,7 @@
 #define BOARD_H_
 
 #include <bits/stdc++.h>
-using UINT64 = long long;
+using UINT64 = unsigned long long;
 
 class Board {
  private:
@@ -29,6 +29,8 @@ class Board {
   void printBoard();
 
   int count(bool color);
+
+  UINT64 getBoard(bool turn) { return (turn ? white : black); }
 
  private:
   UINT64 transfer(const UINT64 put, const int k);
