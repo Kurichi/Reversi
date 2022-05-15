@@ -66,6 +66,7 @@ int main() {
       a.first.setTurn(j % 2);
       if (runRand(a.first, j % 2) == (j % 2)) a.second++;
     }
+    std::cout << ++test << std::endl;
   }
 
   // sort by win-count
@@ -89,7 +90,7 @@ int main() {
 
     // 1000 battle
     for (auto& a : v) {
-      for (int j = 0; j < 1000; j++) {
+      for (int j = 0; j < 100; j++) {
         a.first.setTurn(j % 2);
         if (runRand(a.first, j % 2) == (j % 2)) a.second++;
       }
@@ -121,7 +122,7 @@ int main() {
 
     // make child
     std::vector<std::vector<int>> tmp(3, std::vector<int>(10, 0));
-    for (int i = 2; i < 10; i++) {
+    for (int i = 2; i < 80; i++) {
       for (int j = 0; j < 3; j++) {
         for (int k = 0; k < 10; k++) {
           int s = rand() % 11;
@@ -136,8 +137,8 @@ int main() {
       v[i].first = MachineLearning(tmp);
     }
 
-    for (int i = 10; i < 15; i++) v[i].first = MachineLearning(ml1, true);
-    for (int i = 15; i < 20; i++) v[i].first = MachineLearning(ml2, true);
+    for (int i = 80; i < 90; i++) v[i].first = MachineLearning(ml1, true);
+    for (int i = 90; i < 100; i++) v[i].first = MachineLearning(ml2, true);
   }
 
   v[0].first.writeWeight("./data/weight1.txt");
