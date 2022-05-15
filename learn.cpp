@@ -62,7 +62,7 @@ int main() {
   // 1000 battle per 1 cli
   int test = 0;
   for (auto& a : v) {
-    for (int j = 0; j < 100; j++) {
+    for (int j = 0; j < 1000; j++) {
       a.first.setTurn(j % 2);
       if (runRand(a.first, j % 2) == (j % 2)) a.second++;
     }
