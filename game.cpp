@@ -34,6 +34,8 @@ void Game::start() {
     turn = !turn;
   }
 
+  board->printBoard();
+
   int black = board->count(0);
   int white = board->count(1);
 

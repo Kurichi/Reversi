@@ -43,6 +43,7 @@ void Board::reverse(const UINT64 put, const bool turn) {
     if (mask & *playerBoard) result |= tmp;
   }
 
+  passCount = 0;
   *playerBoard ^= (put | result);
   *opponentBoard ^= result;
 }

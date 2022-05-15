@@ -15,7 +15,7 @@ MachineLearning::MachineLearning(const int mode) {
 
       // load
     case 1:
-      std::ifstream ifs("./data/weight.txt");
+      std::ifstream ifs("./data/hand_weight.txt");
       if (ifs.fail()) {
         std::cerr << "Can't load weight file" << std::endl;
         exit(1);
