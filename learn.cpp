@@ -111,12 +111,10 @@ int main() {
     // 1000 battle
     int progress = 0;
     for (auto& a : v) {
-      a.first.printWeight();
       for (int j = 0; j < 100; j++) {
         if (runRand(a.first, j % 2) == (j % 2)) a.second++;
-        std::cout << j << std::endl;
       }
-      std::cout << ++progress << std::endl;
+      std::cout << "Cli:" << ++progress << " 勝利数:" << a.second << std::endl;
     }
     std::cout << "End" << std::endl;
 
