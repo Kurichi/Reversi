@@ -79,10 +79,12 @@ int main() {
   for (auto& a : v) a.first = MachineLearning(0);
 
   // 1000 battle per 1 cli
+  int cnt = 0;
   for (auto& a : v) {
     for (int j = 0; j < 100; j++) {
       if (runRand(a.first, j % 2) == (j % 2)) a.second++;
     }
+    std::cout << ++cnt << std::endl;
   }
 
   // sort by win-count
