@@ -99,7 +99,7 @@ int main() {
   v[0].first.printWeight();
 
   // learn start
-  int cnt = 0;
+  cnt = 0;
   while (true) {
     std::cout << ++cnt << "回目" << std::endl;
 
