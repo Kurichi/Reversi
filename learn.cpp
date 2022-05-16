@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 
 #include <cstdlib>
+#include <ctime>
 
 #include "board.hpp"
 #include "machine_learning.hpp"
@@ -68,7 +69,7 @@ bool runRand(MachineLearning& ml, bool t) {
 }
 
 int main() {
-  const int NUM_CLI = 10;
+  const int NUM_CLI = 100;
   srand((unsigned)time(NULL));
 
   /* MachineLearning ml = MachineLearning(0); */
@@ -80,29 +81,10 @@ int main() {
       NUM_CLI, std::pair<MachineLearning, int>(NULL, 0));
   for (auto& a : v) a.first = MachineLearning(0);
 
-  // 1000 battle per 1 cli
-  /* int cnt = 0; */
-  /* for (auto& a : v) { */
-  /*   for (int j = 0; j < 100; j++) { */
-  /*     if (runRand(a.first, j % 2) == (j % 2)) a.second++; */
-  /*   } */
-  /*   std::cout << ++cnt << std::endl; */
-  /* } */
-
-  // sort by win-count
-  /* sort(v.begin(), v.end(), [](auto const& lhs, auto const& rhs) { */
-  /*   return lhs.second > rhs.second; */
-  /* }); */
-  /* v.erase(v.begin() + 100, v.end()); */
-
-  // 1000 => 100
-  /* for (auto& a : v) std::cout << a.second << std::endl; */
-
-  /* v[0].first.printWeight(); */
-
   // learn start
   int cnt = 0;
   while (true) {
+    clock_t start = clock();
     std::cout << ++cnt << "回目" << std::endl;
 
     // win count reset
@@ -111,12 +93,13 @@ int main() {
     // 1000 battle
     int progress = 0;
     for (auto& a : v) {
-      for (int j = 0; j < 100; j++) {
-        if (runRand(a.first, j % 2) == (j % 2)) a.second++;
+      {
+        for (int j = 0; j < 1000; j++) {
+          if (runRand(a.first, j % 2) == (j % 2)) a.second++;
+        }
       }
-      std::cout << "Cli:" << ++progress << " 勝利数:" << a.second << std::endl;
+      std::cout << "Cli : " << ++progress << " win:" << a.second << std::endl;
     }
-    std::cout << "End" << std::endl;
 
     // sort by win-count
     sort(v.begin(), v.end(), [](auto const& lhs, auto const& rhs) {
@@ -129,12 +112,12 @@ int main() {
     v[0].second = 0;
 
     // challenge
-    for (int j = 0; j < 100; j++) {
+    for (int j = 0; j < 1000; j++) {
       if (runRand(v[0].first, j % 2) == (j % 2)) v[0].second++;
     }
     std::cout << "勝率 : " << (double)v[0].second / 10 << "%" << std::endl;
 
-    if (v[0].second == 100) {
+    if (v[0].second > 980) {
       break;
     }
 
@@ -143,7 +126,7 @@ int main() {
 
     // make child
     std::vector<std::vector<int>> tmp(10, std::vector<int>(10, 0));
-    for (int i = 2; i < 8; i++) {
+    for (int i = 2; i < NUM_CLI * 0.8; i++) {
       for (int j = 0; j < 10; j++) {
         for (int k = 0; k < 10; k++) {
           int s = rand() % 11;
@@ -158,8 +141,13 @@ int main() {
       v[i].first = MachineLearning(tmp);
     }
 
-    for (int i = 80; i < 9; i++) v[i].first = MachineLearning(ml1, true);
-    for (int i = 90; i < 10; i++) v[i].first = MachineLearning(ml2, true);
+    for (int i = NUM_CLI * 0.8; i < NUM_CLI * 0.9; i++)
+      v[i].first = MachineLearning(ml1, true);
+    for (int i = NUM_CLI * 0.9; i < NUM_CLI; i++)
+      v[i].first = MachineLearning(ml2, true);
+
+    clock_t end = clock();
+    std::cout << (double)(end - start) / CLOCKS_PER_SEC << std::endl;
   }
 
   v[0].first.writeWeight("./data/weight1.txt");

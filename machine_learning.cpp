@@ -94,18 +94,18 @@ void MachineLearning::printWeight() {
 }
 
 UINT64 MachineLearning::makePut(Board board, int turn) {
-  if (turn > 30) {
-    if (isShot) {
-      return mp[board.getBoard(myColor)][board.getBoard(!myColor)];
-    } else if (shot(board, myColor, clock())) {
-      isShot = true;
-      /* std::cout << "読み切った" << std::endl; */
-      return mp[board.getBoard(myColor)][board.getBoard(!myColor)];
-    } else {
-      /* std::cout << "読み切りタイムオーバー" << std::endl; */
-    }
-  } else
-    isShot = false;
+  /* if (turn > 30) { */
+  /*   if (isShot) { */
+  /*     return mp[board.getBoard(myColor)][board.getBoard(!myColor)]; */
+  /*   } else if (shot(board, myColor, clock())) { */
+  /*     isShot = true; */
+  /*     /1* std::cout << "読み切った" << std::endl; *1/ */
+  /*     return mp[board.getBoard(myColor)][board.getBoard(!myColor)]; */
+  /*   } else { */
+  /*     /1* std::cout << "読み切りタイムオーバー" << std::endl; *1/ */
+  /*   } */
+  /* } else */
+  /*   isShot = false; */
 
   UINT64 legalBoard = board.makeLegalBoard(myColor);
   UINT64 legal;
