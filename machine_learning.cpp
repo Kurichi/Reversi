@@ -94,21 +94,22 @@ void MachineLearning::printWeight() {
 }
 
 UINT64 MachineLearning::makePut(Board board, int turn) {
-  UINT64 legalBoard = board.makeLegalBoard(myColor);
-  UINT64 legal;
-  UINT64 mask, mask2, mask3;
-
   if (turn > 30) {
-    if (isShot)
+    if (isShot) {
       return mp[board.getBoard(myColor)][board.getBoard(!myColor)];
-    else if (shot(board, myColor, clock())) {
+    } else if (shot(board, myColor, clock())) {
       isShot = true;
       /* std::cout << "読み切った" << std::endl; */
       return mp[board.getBoard(myColor)][board.getBoard(!myColor)];
     } else {
       /* std::cout << "読み切りタイムオーバー" << std::endl; */
     }
-  }
+  } else
+    isShot = false;
+
+  UINT64 legalBoard = board.makeLegalBoard(myColor);
+  UINT64 legal;
+  UINT64 mask, mask2, mask3;
 
   std::pair<UINT64, int> MAX(0, -(int)INFINITY);
   for (int i = 63; i >= 0; --i) {
@@ -118,7 +119,7 @@ UINT64 MachineLearning::makePut(Board board, int turn) {
 
       board2.reverse(mask, myColor);
       UINT64 legal = board2.makeLegalBoard(!myColor);
-      int MIN = (int)INFINITY;
+      int MIN = 1e5;
       if (!legal) return mask;
       for (int j = 63; j >= 0; --j) {
         mask2 = (UINT64)1 << j;
@@ -155,7 +156,7 @@ void MachineLearning::writeWeight(std::string fname) {
 }
 
 bool MachineLearning::shot(Board board, bool turn, clock_t start) {
-  if ((double)(clock() - start) / CLOCKS_PER_SEC > 2) return false;
+  if ((double)(clock() - start) / CLOCKS_PER_SEC > 0.1) return false;
 
   UINT64 legalBoard = board.makeLegalBoard(turn);
   if (!legalBoard) {
