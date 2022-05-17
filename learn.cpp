@@ -13,7 +13,7 @@ bool runRand(MachineLearning& ml, bool t) {
   ml.setTurn(t);
 
   while (board.isContinue()) {
-    /* board.printBoard(); */
+    board.printBoard();
 
     UINT64 legalBoard = board.makeLegalBoard(turn);
     if (legalBoard) {
@@ -21,26 +21,26 @@ bool runRand(MachineLearning& ml, bool t) {
       do {
         // random turn
         if (t) {
-          /* std::cout << ">>"; */
-          /* char column, row; */
-          /* std::cin >> column >> row; */
-          /* column -= 'A'; */
-          /* row -= '1'; */
-          /* put = (UINT64)1 << (8 * (7 - row) + (7 - column)); */
-          /* while (!(legalBoard & put)) { */
-          /*   std::cout << "Don't put there!!" << std::endl << " : "; */
-          /*   std::cin >> column >> row; */
-          /*   column -= 'A'; */
-          /*   row -= '1'; */
-          /*   put = (UINT64)1 << (8 * (7 - row) + (7 - column)); */
-          /* } */
-
-          std::vector<UINT64> l;
-          for (int i = 0; i < 64; i++) {
-            UINT64 mask = (UINT64)1 << i;
-            if (legalBoard & mask) l.push_back(mask);
+          std::cout << ">>";
+          char column, row;
+          std::cin >> column >> row;
+          column -= 'A';
+          row -= '1';
+          put = (UINT64)1 << (8 * (7 - row) + (7 - column));
+          while (!(legalBoard & put)) {
+            std::cout << "Don't put there!!" << std::endl << " : ";
+            std::cin >> column >> row;
+            column -= 'A';
+            row -= '1';
+            put = (UINT64)1 << (8 * (7 - row) + (7 - column));
           }
-          put = l[rand() % l.size()];
+
+          /* std::vector<UINT64> l; */
+          /* for (int i = 0; i < 64; i++) { */
+          /*   UINT64 mask = (UINT64)1 << i; */
+          /*   if (legalBoard & mask) l.push_back(mask); */
+          /* } */
+          /* put = l[rand() % l.size()]; */
         }
         // AI turn
         else {
@@ -58,12 +58,12 @@ bool runRand(MachineLearning& ml, bool t) {
     t = !t;
   }
 
-  /* board.printBoard(); */
+  board.printBoard();
 
   int black = board.count(0);
   int white = board.count(1);
-  /* std::cout << "Black " << std::setw(2) << black << " : " << std::setw(2) */
-  /*           << white << std::endl; */
+  std::cout << "Black " << std::setw(2) << black << " : " << std::setw(2)
+            << white << std::endl;
 
   return black < white;
 }
@@ -72,10 +72,18 @@ int main() {
   const int NUM_CLI = 100;
   srand((unsigned)time(NULL));
 
-  /* MachineLearning ml = MachineLearning(0); */
-  /* ml.printWeight(); */
-  /* runRand(ml, 0); */
-  /* return 0; */
+  MachineLearning ml = MachineLearning(1);
+  int x;
+  std::cin >> x;
+  runRand(ml, x);
+  return 0;
+
+  int count = 0;
+  for (int i = 0; i < 100; i++)
+    if (runRand(ml, i % 2) == i % 2) count++;
+  std::cout << count << std::endl;
+  return 0;
+
   // random weight generate
   std::vector<std::pair<MachineLearning, int>> v(
       NUM_CLI, std::pair<MachineLearning, int>(NULL, 0));
