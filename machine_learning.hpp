@@ -14,13 +14,17 @@ class MachineLearning {
   MachineLearning(const int mode);
   MachineLearning(std::vector<std::vector<int>> _weightLine, bool mut = false);
 
+  void lineToMap();
+
   void setTurn(bool turn) { myColor = turn; }
 
   std::vector<std::vector<int>> getWeight() { return weightLine; }
 
   void printWeight();
 
-  UINT64 makePut(Board board, int turn);
+  UINT64 makePut(const Board &board, const int turn);
+
+  int search(const Board &board, bool color, int depth, const int currentScore);
 
   void writeWeight(std::string fname);
 

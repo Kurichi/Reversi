@@ -18,4 +18,4 @@ MachineLearning : learn.cpp board.o ml.o
 all : clean Reversi
 
 clean:
-	-rm -f *.o
+	-rm -f *.o *.exe

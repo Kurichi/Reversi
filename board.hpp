@@ -18,7 +18,7 @@ class Board {
 
   bool canPut(const bool turn, const UINT64 put);
 
-  UINT64 makeLegalBoard(const bool turn);
+  UINT64 makeLegalBoard(const bool turn) const;
 
   void reverse(const UINT64 put, const bool turn);
 
@@ -26,11 +26,11 @@ class Board {
 
   const void pass() { ++passCount; }
 
-  void printBoard();
+  void printBoard() const;
 
   int count(bool color);
 
-  UINT64 getBoard(bool turn) { return (turn ? white : black); }
+  UINT64 getBoard(bool turn) const { return (turn ? white : black); }
 
  private:
   UINT64 transfer(const UINT64 put, const int k);

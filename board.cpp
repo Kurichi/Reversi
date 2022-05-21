@@ -48,7 +48,7 @@ void Board::reverse(const UINT64 put, const bool turn) {
   *opponentBoard ^= result;
 }
 
-UINT64 Board::makeLegalBoard(const bool turn) {
+UINT64 Board::makeLegalBoard(const bool turn) const {
   UINT64 opponentBoard = (turn ? black : white);
   UINT64 playerBoard = (turn ? white : black);
   UINT64 blankBoard = ~(opponentBoard | playerBoard);
@@ -141,7 +141,7 @@ bool Board::isContinue() {
   return true;
 }
 
-void Board::printBoard() {
+void Board::printBoard() const {
   putchar(' ');
   for (int i = 0; i < 8; i++) putchar('A' + i);
 
