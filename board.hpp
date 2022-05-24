@@ -2,11 +2,10 @@
 #define BOARD_H_
 
 #include <bits/stdc++.h>
-using UINT64 = unsigned long long;
 
 class Board {
  private:
-  UINT64 white, black;
+  uint64_t white, black;
   int passCount;
 
  public:
@@ -16,24 +15,24 @@ class Board {
     black = 0x0000000810000000;
   }
 
-  bool canPut(const bool turn, const UINT64 put);
+  bool canPut(const bool turn, const uint64_t put);
 
-  UINT64 makeLegalBoard(const bool turn) const;
+  uint64_t makeLegalBoard(const bool turn) const;
 
-  void reverse(const UINT64 put, const bool turn);
+  void reverse(const uint64_t put, const bool turn);
 
-  bool isContinue();
+  bool isContinue() const;
 
   const void pass() { ++passCount; }
 
   void printBoard() const;
 
-  int count(bool color);
+  int count(const bool color) const;
 
-  UINT64 getBoard(bool turn) const { return (turn ? white : black); }
+  uint64_t getBoard(const bool turn) const { return (turn ? white : black); }
 
  private:
-  UINT64 transfer(const UINT64 put, const int k);
+  uint64_t transfer(const uint64_t put, const int k) const;
 };
 
 #endif  // BOARD_H_

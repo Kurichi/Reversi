@@ -7,7 +7,7 @@ class MachineLearning {
   std::vector<std::vector<int>> weightLine;
   std::vector<std::vector<int>> weight;
   bool myColor;
-  std::unordered_map<UINT64, std::unordered_map<UINT64, UINT64>> mp;
+  std::unordered_map<uint64_t, std::unordered_map<uint64_t, uint64_t>> mp;
   bool isShot = false;
 
  public:
@@ -22,7 +22,7 @@ class MachineLearning {
 
   void printWeight();
 
-  UINT64 makePut(const Board &board, const int turn);
+  uint64_t makePut(const Board &board, const int turn);
 
   int search(const Board &board, bool color, int depth, const int currentScore);
 

@@ -11,18 +11,18 @@ void Game::start() {
     std::cout << "Turn " << std::setw(2) << ++progress << " "
               << (turn ? " White " : " Black ") << " : ";
 
-    UINT64 legalBoard = board->makeLegalBoard(turn);
+    uint64_t legalBoard = board->makeLegalBoard(turn);
     if (legalBoard) {
       std::cin >> column >> row;
       column -= 'A';
       row -= '1';
-      UINT64 put = (UINT64)1 << (8 * (7 - row) + (7 - column));
+      uint64_t put = (uint64_t)1 << (8 * (7 - row) + (7 - column));
       while (!(legalBoard & put)) {
         std::cout << "Don't put there!!" << std::endl << " : ";
         std::cin >> column >> row;
         column -= 'A';
         row -= '1';
-        put = (UINT64)1 << (8 * (7 - row) + (7 - column));
+        put = (uint64_t)1 << (8 * (7 - row) + (7 - column));
       }
 
       board->reverse(put, turn);

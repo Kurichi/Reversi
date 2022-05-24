@@ -15,9 +15,9 @@ bool runRand(MachineLearning& ml, bool t) {
   while (board.isContinue()) {
     board.printBoard();
 
-    UINT64 legalBoard = board.makeLegalBoard(turn);
+    uint64_t legalBoard = board.makeLegalBoard(turn);
     if (legalBoard) {
-      UINT64 put;
+      uint64_t put;
       do {
         // random turn
         if (t) {
@@ -26,18 +26,18 @@ bool runRand(MachineLearning& ml, bool t) {
           std::cin >> column >> row;
           column -= 'A';
           row -= '1';
-          put = (UINT64)1 << (8 * (7 - row) + (7 - column));
+          put = (uint64_t)1 << (8 * (7 - row) + (7 - column));
           while (!(legalBoard & put)) {
             std::cout << "Don't put there!!" << std::endl << " : ";
             std::cin >> column >> row;
             column -= 'A';
             row -= '1';
-            put = (UINT64)1 << (8 * (7 - row) + (7 - column));
+            put = (uint64_t)1 << (8 * (7 - row) + (7 - column));
           }
 
-          /* std::vector<UINT64> l; */
+          /* std::vector<uint64_t> l; */
           /* for (int i = 0; i < 64; i++) { */
-          /*   UINT64 mask = (UINT64)1 << i; */
+          /*   uint64_t mask = (uint64_t)1 << i; */
           /*   if (legalBoard & mask) l.push_back(mask); */
           /* } */
           /* put = l[rand() % l.size()]; */
@@ -161,4 +161,3 @@ int main() {
   v[0].first.writeWeight("./data/weight1.txt");
   v[1].first.writeWeight("./data/weight2.txt");
 }
-

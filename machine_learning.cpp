@@ -78,9 +78,9 @@ void MachineLearning::printWeight() {
   }
 }
 
-UINT64 MachineLearning::makePut(const Board &board, const int turn) {
+uint64_t MachineLearning::makePut(const Board &board, const int turn) {
   if (turn == 41)
-    mp = std::unordered_map<UINT64, std::unordered_map<UINT64, UINT64>>();
+    mp = std::unordered_map<uint64_t, std::unordered_map<uint64_t, uint64_t>>();
   if (turn > 40) {
     if (isShot) {
       return mp[board.getBoard(myColor)][board.getBoard(!myColor)];
@@ -94,11 +94,11 @@ UINT64 MachineLearning::makePut(const Board &board, const int turn) {
   } else
     isShot = false;
 
-  const UINT64 legalBoard = board.makeLegalBoard(myColor);
+  const uint64_t legalBoard = board.makeLegalBoard(myColor);
 
-  std::pair<UINT64, int> MAX(0, -(int)INFINITY);
+  std::pair<uint64_t, int> MAX(0, -(int)INFINITY);
   for (int i = 63; i >= 0; --i) {
-    const UINT64 mask = (UINT64)1 << i;
+    const uint64_t mask = (uint64_t)1 << i;
     if (legalBoard & mask) {
       Board board2 = board;
       board2.reverse(mask, myColor);
@@ -118,11 +118,11 @@ int MachineLearning::search(const Board &board, bool color, int depth,
                             const int currentScore) {
   // end search
   if (depth > 8) {
-    const UINT64 myBoard = board.getBoard(myColor);
-    const UINT64 oppoBoard = board.getBoard(!myColor);
+    const uint64_t myBoard = board.getBoard(myColor);
+    const uint64_t oppoBoard = board.getBoard(!myColor);
     int score = 0;
     for (int i = 0; i < 64; i++) {
-      const UINT64 mask = (UINT64)1 << i;
+      const uint64_t mask = (uint64_t)1 << i;
       if (mask & myBoard) {
         score += weight[i][i];
       } else if (mask & oppoBoard) {
@@ -132,7 +132,7 @@ int MachineLearning::search(const Board &board, bool color, int depth,
     }
   }
 
-  const UINT64 legalBoard = board.makeLegalBoard(color);
+  const uint64_t legalBoard = board.makeLegalBoard(color);
 
   // can't put anywhere
   if (!legalBoard) {
@@ -141,7 +141,7 @@ int MachineLearning::search(const Board &board, bool color, int depth,
 
   int score = (int)INFINITY * (color ? -1 : 1);
   for (int i = 0; i < 64; i++) {
-    const UINT64 mask = (UINT64)1 << i;
+    const uint64_t mask = (uint64_t)1 << i;
     if (legalBoard & mask) {
       Board putBoard = board;
       putBoard.reverse(mask, color);
@@ -167,12 +167,14 @@ void MachineLearning::writeWeight(std::string fname) {
 
 bool MachineLearning::shot(Board board, bool turn, clock_t start) {
   if ((double)(clock() - start) / CLOCKS_PER_SEC > 2) return false;
-  if (mp.find(board.getBoard(myColor)) != mp.end() &&
+  std::map<int, int> m;
+  m.contains();
+  if (mp.contains(board.getBoard(myColor)) &&
       mp[board.getBoard(myColor)].find(board.getBoard(!myColor)) !=
           mp[board.getBoard(myColor)].end())
     return true;
 
-  UINT64 legalBoard = board.makeLegalBoard(turn);
+  uint64_t legalBoard = board.makeLegalBoard(turn);
   if (!legalBoard) {
     turn = !turn;
     legalBoard = board.makeLegalBoard(turn);
@@ -181,7 +183,7 @@ bool MachineLearning::shot(Board board, bool turn, clock_t start) {
   bool canWin = (turn != myColor);
   if (legalBoard) {
     for (int i = 0; i < 64; i++) {
-      UINT64 mask = (UINT64)1 << i;
+      uint64_t mask = (uint64_t)1 << i;
       if (legalBoard & mask) {
         Board b = board;
         b.reverse(mask, turn);

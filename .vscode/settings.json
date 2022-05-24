@@ -1,3 +1,10 @@
 {
-    "makefile.extensionOutputFolder": "./.vscode"
+    "C_Cpp.clang_format_style": "Google",
+    "makefile.extensionOutputFolder": "./.vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "[cpp]": {
+        "editor.tabSize": 4,
+    },
 }

@@ -1,11 +1,11 @@
 #include "board.hpp"
 
-bool Board::canPut(const bool turn, const UINT64 put) {
-  const UINT64 legalBoard = makeLegalBoard(turn);
+bool Board::canPut(const bool turn, const uint64_t put) {
+  const uint64_t legalBoard = makeLegalBoard(turn);
   return (put & legalBoard);
 }
 
-UINT64 Board::transfer(const UINT64 put, const int k) {
+uint64_t Board::transfer(const uint64_t put, const int k) const {
   switch (k) {
     case 0:  //上
       return (put << 8) & 0xffffffffffffff00;
@@ -28,14 +28,14 @@ UINT64 Board::transfer(const UINT64 put, const int k) {
   }
 }
 
-void Board::reverse(const UINT64 put, const bool turn) {
-  UINT64 *opponentBoard = (turn ? &black : &white);
-  UINT64 *playerBoard = (turn ? &white : &black);
+void Board::reverse(const uint64_t put, const bool turn) {
+  uint64_t *opponentBoard = (turn ? &black : &white);
+  uint64_t *playerBoard = (turn ? &white : &black);
 
-  UINT64 result = 0;
+  uint64_t result = 0;
   for (int i = 0; i < 8; i++) {
-    UINT64 tmp = 0;
-    UINT64 mask = transfer(put, i);
+    uint64_t tmp = 0;
+    uint64_t mask = transfer(put, i);
     while (mask != 0 && (mask & *opponentBoard) != 0) {
       tmp |= mask;
       mask = transfer(mask, i);
@@ -48,16 +48,16 @@ void Board::reverse(const UINT64 put, const bool turn) {
   *opponentBoard ^= result;
 }
 
-UINT64 Board::makeLegalBoard(const bool turn) const {
-  UINT64 opponentBoard = (turn ? black : white);
-  UINT64 playerBoard = (turn ? white : black);
-  UINT64 blankBoard = ~(opponentBoard | playerBoard);
+uint64_t Board::makeLegalBoard(const bool turn) const {
+  const uint64_t opponentBoard = (turn ? black : white);
+  const uint64_t playerBoard = (turn ? white : black);
+  const uint64_t blankBoard = ~(opponentBoard | playerBoard);
 
-  UINT64 horizontalWatchBoard = opponentBoard & 0x7e7e7e7e7e7e7e7e;
-  UINT64 verticalWatchBoard = opponentBoard & 0x00ffffffffffff00;
-  UINT64 allWatchBoard = opponentBoard & 0x007e7e7e7e7e7e00;
+  const uint64_t horizontalWatchBoard = opponentBoard & 0x7e7e7e7e7e7e7e7e;
+  const uint64_t verticalWatchBoard = opponentBoard & 0x00ffffffffffff00;
+  const uint64_t allWatchBoard = opponentBoard & 0x007e7e7e7e7e7e00;
 
-  UINT64 tmp, legalBoard;
+  uint64_t tmp, legalBoard;
 
   // left
   tmp = horizontalWatchBoard & (playerBoard << 1);
@@ -133,7 +133,7 @@ UINT64 Board::makeLegalBoard(const bool turn) const {
   return legalBoard;
 }
 
-bool Board::isContinue() {
+bool Board::isContinue() const {
   if (passCount == 2) return false;
 
   if ((white | black) == 0xffffffffffffffff) return false;
@@ -148,7 +148,7 @@ void Board::printBoard() const {
   for (int i = 0; i < 64; i++) {
     if (i % 8 == 0) std::cout << std::endl << (i / 8) + 1;
 
-    UINT64 mask = ((UINT64)1 << (63 - i));
+    const uint64_t mask = ((uint64_t)1 << (63 - i));
     if (white & mask)
       std::cout << "●";
     else if (black & mask)
@@ -159,11 +159,11 @@ void Board::printBoard() const {
   putchar('\n');
 }
 
-int Board::count(bool color) {
-  UINT64 board = (color ? white : black);
+int Board::count(bool color) const {
+  const uint64_t board = (color ? white : black);
   int count = 0;
   for (int i = 0; i < 64; i++) {
-    UINT64 mask = (UINT64)1 << i;
+    const uint64_t mask = (uint64_t)1 << i;
     if (board & mask) count++;
   }
   return count;
