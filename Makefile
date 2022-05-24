@@ -13,7 +13,7 @@ ml.o : machine_learning.cpp machine_learning.hpp
 	$(CC) -std=c++2a -c machine_learning.cpp -o ml.o -lstdc++
 
 MachineLearning : learn.cpp board.o ml.o
-	$(CC) -std=c++2a board.o ml.o learn.cpp -o MachineLearning.exe -lstdc++
+	$(CC) -std=c++2a board.o ml.o learn.cpp -o MachineLearning.exe -lstdc++ -fopenmp
 
 all : clean Reversi
 

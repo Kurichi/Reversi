@@ -11,7 +11,8 @@ class MachineLearning {
   bool isShot = false;
 
  public:
-  MachineLearning(const int mode);
+  MachineLearning();
+  MachineLearning(const std::string path);
   MachineLearning(std::vector<std::vector<int>> _weightLine, bool mut = false);
 
   void lineToMap();
@@ -24,11 +25,12 @@ class MachineLearning {
 
   uint64_t makePut(const Board &board, const int turn);
 
-  int search(const Board &board, bool color, int depth, const int currentScore);
+  int search(const Board &board, bool color, int depth, const int currentScore,
+             const int turn);
 
   void writeWeight(std::string fname);
 
-  bool shot(Board board, bool turn, clock_t start);
+  bool shot(const Board board, bool turn, const clock_t start);
 };
 
 #endif  // ML_H_

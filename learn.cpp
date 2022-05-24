@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <omp.h>
 
 #include <cstdlib>
 #include <ctime>
@@ -6,14 +7,14 @@
 #include "board.hpp"
 #include "machine_learning.hpp"
 
-bool runRand(MachineLearning& ml, bool t) {
+bool runRand(MachineLearning ml, bool t) {
   bool turn = false;
   int prog = 0;
   Board board = Board();
   ml.setTurn(t);
 
   while (board.isContinue()) {
-    board.printBoard();
+    // board.printBoard();
 
     uint64_t legalBoard = board.makeLegalBoard(turn);
     if (legalBoard) {
@@ -21,31 +22,31 @@ bool runRand(MachineLearning& ml, bool t) {
       do {
         // random turn
         if (t) {
-          std::cout << ">>";
-          char column, row;
-          std::cin >> column >> row;
-          column -= 'A';
-          row -= '1';
-          put = (uint64_t)1 << (8 * (7 - row) + (7 - column));
-          while (!(legalBoard & put)) {
-            std::cout << "Don't put there!!" << std::endl << " : ";
-            std::cin >> column >> row;
-            column -= 'A';
-            row -= '1';
-            put = (uint64_t)1 << (8 * (7 - row) + (7 - column));
-          }
+          // std::cout << ">>";
+          // char column, row;
+          // std::cin >> column >> row;
+          // column -= 'A';
+          // row -= '1';
+          // put = (uint64_t)1 << (8 * (7 - row) + (7 - column));
+          // while (!(legalBoard & put)) {
+          //   std::cout << "Don't put there!!" << std::endl << " : ";
+          //   std::cin >> column >> row;
+          //   column -= 'A';
+          //   row -= '1';
+          //   put = (uint64_t)1 << (8 * (7 - row) + (7 - column));
+          // }
 
-          /* std::vector<uint64_t> l; */
-          /* for (int i = 0; i < 64; i++) { */
-          /*   uint64_t mask = (uint64_t)1 << i; */
-          /*   if (legalBoard & mask) l.push_back(mask); */
-          /* } */
-          /* put = l[rand() % l.size()]; */
+          std::vector<uint64_t> l;
+          for (int i = 0; i < 64; i++) {
+            uint64_t mask = (uint64_t)1 << i;
+            if (legalBoard & mask) l.push_back(mask);
+          }
+          put = l[rand() % l.size()];
         }
         // AI turn
         else {
           put = ml.makePut(board, prog);
-          /* std::cout << put << std::endl; */
+          // std::cout << put << std::endl;
         }
       } while (!(legalBoard & put));
 
@@ -58,36 +59,39 @@ bool runRand(MachineLearning& ml, bool t) {
     t = !t;
   }
 
-  board.printBoard();
+  // board.printBoard();
 
   int black = board.count(0);
   int white = board.count(1);
-  std::cout << "Black " << std::setw(2) << black << " : " << std::setw(2)
-            << white << std::endl;
+  // std::cout << "Black " << std::setw(2) << black << " : " << std::setw(2)
+  //           << white << " White" << std::endl;
 
   return black < white;
 }
 
 int main() {
-  const int NUM_CLI = 100;
+  const int NUM_CLI = 16;
   srand((unsigned)time(NULL));
 
-  MachineLearning ml = MachineLearning(1);
-  int x;
-  std::cin >> x;
-  runRand(ml, x);
-  return 0;
+  // MachineLearning ml = MachineLearning(1);
+  // int x;
+  // std::cin >> x;
+  // runRand(ml, x);
+  // return 0;
 
-  int count = 0;
-  for (int i = 0; i < 100; i++)
-    if (runRand(ml, i % 2) == i % 2) count++;
-  std::cout << count << std::endl;
-  return 0;
+  // int count = 0;
+  // for (int i = 0; i < 100; i++)
+  //   if (runRand(ml, i % 2) == i % 2) count++;
+  // std::cout << count << std::endl;
+  // return 0;
 
   // random weight generate
-  std::vector<std::pair<MachineLearning, int>> v(
-      NUM_CLI, std::pair<MachineLearning, int>(NULL, 0));
-  for (auto& a : v) a.first = MachineLearning(0);
+  std::vector<std::pair<MachineLearning, int>> v(NUM_CLI);
+  for (auto& a : v) a.first = MachineLearning();
+  v[0].first = MachineLearning("./data/hand_weight.txt");
+  v[1].first = MachineLearning("./data/weight1.txt");
+  v[2].first = MachineLearning("./data/weight2.txt");
+  v[3].first = MachineLearning("./data/create_weight.txt");
 
   // learn start
   int cnt = 0;
@@ -98,34 +102,36 @@ int main() {
     // win count reset
     for (auto& a : v) a.second = 0;
 
-    // 1000 battle
-    int progress = 0;
-    for (auto& a : v) {
-      {
-        for (int j = 0; j < 1000; j++) {
-          if (runRand(a.first, j % 2) == (j % 2)) a.second++;
-        }
+      // 1000 battle
+
+#pragma omp parallel for
+    for (int i = 0; i < NUM_CLI; i++) {
+      for (int j = 0; j < 50; j++) {
+        if (runRand(v[i].first, j % 2) == (j % 2)) v[i].second++;
+        std::cout << i << "\t" << j << "\n";
       }
-      std::cout << "Cli : " << ++progress << " win:" << a.second << std::endl;
+      std::cout << "Cli : " << i << " win:" << v[i].second << "\n";
     }
+    // print win-count
+    for (auto& a : v) std::cout << a.second << "\n";
+    v[0].first.printWeight();
+    v[0].second = 0;
 
     // sort by win-count
     sort(v.begin(), v.end(), [](auto const& lhs, auto const& rhs) {
       return lhs.second > rhs.second;
     });
 
-    // print win-count
-    for (auto& a : v) std::cout << a.second << std::endl;
-    v[0].first.printWeight();
-    v[0].second = 0;
-
     // challenge
+    int winCount = 0;
+#pragma omp parallel for reduction(+ : winCount)
     for (int j = 0; j < 1000; j++) {
-      if (runRand(v[0].first, j % 2) == (j % 2)) v[0].second++;
+      if (runRand(v[0].first, j % 2) == (j % 2)) winCount++;
+      std::cout << j << "\n";
     }
-    std::cout << "勝率 : " << (double)v[0].second / 10 << "%" << std::endl;
+    std::cout << "勝率 : " << (double)winCount / 10 << "%" << std::endl;
 
-    if (v[0].second > 980) {
+    if (winCount == 1000) {
       break;
     }
 
@@ -135,7 +141,7 @@ int main() {
     // make child
     std::vector<std::vector<int>> tmp(10, std::vector<int>(10, 0));
     for (int i = 2; i < NUM_CLI * 0.8; i++) {
-      for (int j = 0; j < 10; j++) {
+      for (int j = 0; j < 3; j++) {
         for (int k = 0; k < 10; k++) {
           int s = rand() % 11;
           if (s < 5)
